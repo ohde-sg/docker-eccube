@@ -1,0 +1,27 @@
+version: '2'
+services:
+  db:
+    build: mysql
+    volumes:
+      - eccubedb:/var/lib/mysql
+      - ./mysql.conf:/etc/mysql/conf.d
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: eccubep
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: adminpass
+  
+  web:
+    build: web
+    volumes:
+      - sync-volume:/var/www/html
+      - ./web/conf:/etc/apache2/sites-enabled
+    ports:
+      - "3000:80"
+    depends_on:
+      - db
+
+volumes:
+  eccubedb:
+  sync-volume:
+    external: true
